@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script defer src="../static/script.js"></script>
+        <title>AdivinhAI Desenho</title>
+        <link rel="stylesheet" type="text/css" href="../static/styles.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        />
+    </head>
+    <body>
+        <div class="header">
+            <h1 id="draw_title">GuessDraw</h1>
+        </div>
+        <div class="main-content">
+            <div class="drawing-area">
+                <p class="instruction">Clique em "Gerar Palavra" para começar.</p>
+                <div id="word_to_draw" class="word-to-draw">&nbsp</div>
+                <canvas id="canvas" class="canvas"></canvas>
+                <div class="controls">
+                    <button id="generate_word_button" title="Generate Word">
+                        Gerar Palavra
+                    </button>
+                    <button id="clear" title="Clear">
+                        <span class="fas fa-trash-alt"></span>
+                    </button>                
+                    <button id="eraser" title="Eraser">Borracha</button>
+                    <input
+                        type="color"
+                        id="color_picker"
+                        value="#000000"
+                        title="Pick Color"
+                    />
+                </div>
+            </div>
+            <div class="history-container">
+                <p>Respostas do Gemini</p>
+                <div id="history" class="history"></div>
+            </div>
+        </div>
+        <div id="successModal" class="modal">
+            <div class="modal-content">
+                <h2>Parabéns!</h2>
+                <p>O Gemini acertou!</p>
+                <button id="playAgain">Jogar Novamente</button>
+                <button id="stop">Parar</button>
+            </div>
+        </div>
+    </body>
+</html>
