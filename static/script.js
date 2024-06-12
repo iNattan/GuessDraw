@@ -65,7 +65,7 @@ function generateWord() {
             clearInterval(captureInterval)
         }
 
-         captureInterval = setInterval(captureAndSend, 10000)
+         captureInterval = setInterval(captureAndSend, 15000)
     })
 }
 

@@ -9,11 +9,42 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 import random
 
-words = ["CANETA", "LIVRO", "TELEFONE", "COMPUTADOR", "BICICLETA", "MESA", "CADEIRA", "RELÓGIO", "ÓCULOS", "BALÃO", "CHAVE", "BOLSA", "SAPATO", "CHAPÉU", 
-         "GUARDA-CHUVA", "ESPONJA", "TESOURA", "ESCOVA", "FACA", "MARTELO", "OLHO", "NARIZ", "BOCA", "MÃO", "PÉ", "ORELHA", "BRAÇO", "PERNA", "CABELO",
-         "LÁBIO", "DENTE", "UNHA", "SOBRANCELHA", "MAÇÃ", "BANANA", "PIZZA", "BOLO", "SORVETE", "CHOCOLATE", "HAMBÚRGUER", "BATATA", "GATO",  "CACHORRO", 
-         "PÁSSARO", "PEIXE", "BORBOLETA", "ABELHA", "SAPO", "COBRA", "ELEFANTE", "GIRAFA", "LEÃO", "TIGRE", "MACACO", "PANDA", "GOLFINHO", "RATO", "CORUJA", 
-         "CAVALO", "URSO", "CAMISETA", "CALÇA", "VESTIDO", "SAIA", "SHORTS", "CASACO", "BLUSA", "MEIA", "JAQUETA", "TERNO"];
+words = ["LÁPIS", "LIVRO", "TELEFONE", "COMPUTADOR", "BICICLETA", "MESA", "CADEIRA", "RELÓGIO", "ÓCULOS", "BALÃO", "CHAVE", "BOLSA", "SAPATO", "CHAPÉU", 
+         "GUARDA-CHUVA", "TESOURA", "ESCOVA", "GARFO", "MARTELO", "OLHO", "NARIZ", "BOCA", "MÃO", "PÉ", "ORELHA", "BRAÇO", "PERNA", "CABELO",
+         "DENTE", "SOBRANCELHA", "MAÇÃ", "BANANA", "PIZZA", "BOLO", "SORVETE", "CHOCOLATE", "HAMBÚRGUER", "BATATA", "GATO",  "CACHORRO", 
+         "PÁSSARO", "PEIXE", "BORBOLETA", "ABELHA", "SAPO", "COBRA", "ELEFANTE", "GIRAFA", "LEÃO", "TIGRE", "MACACO", "PANDA", "GOLFINHO", "RATO", 
+         "CAVALO", "URSO", "CAMISETA", "CALÇA", "VESTIDO", "SAIA", "CASACO", "BLUSA", "MEIA", "TERNO"]
+
+generation_config = {
+  "temperature": 1,
+  "top_p": 0.95,
+  "top_k": 64,
+  "max_output_tokens": 8192,
+  "response_mime_type": "text/plain",
+}
+
+safe = [
+    {
+        "category": "HARM_CATEGORY_DANGEROUS",
+        "threshold": "BLOCK_NONE",
+    },
+    {
+        "category": "HARM_CATEGORY_HARASSMENT",
+        "threshold": "BLOCK_NONE",
+    },
+    {
+        "category": "HARM_CATEGORY_HATE_SPEECH",
+        "threshold": "BLOCK_NONE",
+    },
+    {
+        "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+        "threshold": "BLOCK_NONE",
+    },
+    {
+        "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+        "threshold": "BLOCK_NONE",
+    }
+]
 
 app = Flask(__name__)
 
@@ -25,7 +56,10 @@ if not gemini_api_key:
 
 genai.configure(api_key=gemini_api_key)
 
-model = genai.GenerativeModel("gemini-pro-vision")
+model = genai.GenerativeModel(
+    model_name="gemini-pro-vision", 
+    generation_config=generation_config,
+    safety_settings=safe)
 
 @app.route('/generate_word')
 def generate_random_word():
@@ -42,7 +76,7 @@ def check_with_model(image):
 
     response = model.generate_content(
         ["""Adivinhe o que está desenhado nesta imagem e caso não houver nada ainda no desenho responda '...'. 
-         Responda só a palavra com suas acentuações e em maiúsculo, sem colocar ponto final 
+         Responda só a palavra com suas acentuações e SEMPRE em maiúsculo, sem colocar ponto final 
          por exemplo, se achar que é um gato responda somente 'GATO'""", image],
         stream=True
     )
